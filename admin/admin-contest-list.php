@@ -68,7 +68,84 @@ include '../nav.php';
 // include 'sidebar.php';  //add here sidebar
 ?>
 
-<div class="main-content">
+  <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            padding: 20px 0;
+        }
+        .sidebar .nav-link {
+            color: #333;
+            border-radius: 0;
+        }
+        .sidebar .nav-link.active {
+            background-color: #dc3545;
+            color: white;
+        }
+        .main-content {
+            padding: 20px;
+        }
+    </style>
+
+<div class="main-content d-flex">
+    <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <h5>Admin Panel</h5>
+                        <p class="text-muted">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></p>
+                    </div>
+                    
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="change-password.php">
+                                Change Password
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="userlist.php">
+                                User List
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="notification.php">
+                                Notifications
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin-contest-create.php">
+                                Create Contest
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link active" href="admin-contest-list.php">
+                                Contest List
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin-edit-contest.php">
+                                Edit Contest
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin-leaderboard.php">
+                                Leaderboards
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="user-contact-details.php">
+                                User Contacts
+                            </a>
+                        </li>
+                        <li class="nav-item mt-3">
+                            <a class="nav-link text-danger" href="../logout.php">
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3 mb-0">Manage Contests</h1>

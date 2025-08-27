@@ -3,6 +3,24 @@ $pageTitle = "BDIQO - Online Quiz Platform";
 include 'nav.php';
 ?>
 
+<!-- <head>
+  <meta charset="UTF-8">
+  <title>Google Fonts - Noto Sans Bengali উদাহরণ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans Bengali', sans-serif;
+      /* margin: 20px; */
+    }
+    h1 {
+      font-weight: 700;
+      text-align: justify;
+    }
+  </style>
+</head> -->
+
 <!-- Hero Section -->
 <section class="hero-section">
     <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
@@ -61,6 +79,28 @@ include 'nav.php';
     </div>
 </section>
 
+<!-- About Section -->
+<section class="about-section py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                     alt="About BDIQO" class="img-fluid rounded shadow">
+            </div> -->
+            <div class="col-lg-12">
+                <h2 class="section-title text-center">উদ্দেশ্য</h2>
+                <p class="lead text-center">বাংলাদেশ আইটি কুইজ এবং প্রোগ্রামিং প্রতিযোগিতা-২০২৫ (বিডিআইকিউপিসি)</p>
+                <p class ="text-justify">
+                    তরুণ প্রজন্মের কাছে প্রোগ্রামিংকে জনপ্রিয় করে তোলার উদ্দেশ্য দেশে প্রথমবারের মত বেসরকারি ভাবে আয়োজিত হতে যাচ্ছে বাংলাদেশ আইটি কুইজ এবং প্রোগ্রামিং প্রতিযোগিতা-২০২৫ (বিডিআইকিউপিসি)। কম্পিউটার প্রোগ্রামিংকে শিক্ষার্থীদের কাছে জনপ্রিয় করে তোলা এবং শিক্ষার্থীদের আইটি ভীতি দূর করে দক্ষ তরুণ প্রজন্ম গড়ে তোলাই আমাদের উদ্দেশ্য । উন্নত দেশগুলোতে বর্তমানে কম্পিউটার শিক্ষার প্রতি গুরুত্ব আরোপ করা হচ্ছে। আনন্দের বিষয় এইযে, আমাদের দেশেও বর্তমানে আইসিটি শিক্ষার প্রতি সরকারি এবং বেসরকারি গুরুত্ব দেয়া হচ্ছে। এরই ধারাবাহিকতায় , বিডিআইকিউপিসি কমিটি এই বছর থেকে আয়োজন শুরু করছে বাংলাদেশ আইটি কুইজ এবং প্রোগ্রামিং প্রতিযোগিতা। শিক্ষার্থী ও অভিভাবকদের আন্তরিক প্রচেষ্টা ও সহযোগিতাই আমাদের উদ্দেশ্য সফল করবে। 
+                </p>
+                <div class="mt-4">
+                    <a href="about.php" class="btn btn-outline-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Features Section -->
 <section class="features-section py-5">
     <div class="container">
@@ -97,29 +137,6 @@ include 'nav.php';
                     </div>
                     <h3>Community</h3>
                     <p>Join thousands of learners and compete in our global leaderboards</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- About Section -->
-<section class="about-section py-5 bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-                     alt="About BDIQO" class="img-fluid rounded shadow">
-            </div>
-            <div class="col-lg-6">
-                <h2 class="section-title">About BDIQO</h2>
-                <p class="lead">Revolutionizing online learning through interactive quizzes</p>
-                <p>BDIQO is a comprehensive online quiz platform designed to help learners of all levels test their knowledge, 
-                   track their progress, and compete with others in a fun and engaging environment.</p>
-                <p>Our platform offers a wide range of quizzes across various subjects, from academic topics to general knowledge, 
-                   ensuring there's something for everyone.</p>
-                <div class="mt-4">
-                    <a href="about.php" class="btn btn-outline-primary">Learn More</a>
                 </div>
             </div>
         </div>
