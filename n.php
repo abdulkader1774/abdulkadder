@@ -1,3 +1,44 @@
+<?php
+require_once 'config.php';
+
+$error = '';
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+    $email = trim($_POST['email']);
+    $full_name = trim($_POST['full_name']);
+    
+    // Validate input
+    if (empty($username) || empty($password) || empty($email)) {
+        $error = 'Please fill in all required fields.';
+    } elseif (strlen($password) < 6) {
+        $error = 'Password must be at least 6 characters long.';
+    } else {
+        // Check if username or email already exists
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+        $stmt->execute([$username, $email]);
+        
+        if ($stmt->fetch()) {
+            $error = 'Username or email already exists.';
+        } else {
+            // Hash password
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            
+            // Insert new user
+            $stmt = $pdo->prepare("INSERT INTO users (username, password, email, full_name) VALUES (?, ?, ?, ?)");
+            if ($stmt->execute([$username, $hashedPassword, $email, $full_name])) {
+                $success = 'Registration successful! You can now login.';
+            } else {
+                $error = 'Registration failed. Please try again.';
+            }
+        }
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,10 +129,8 @@
                         <p class="text-muted">Please fill in all the required information</p>
                     </div>
 
-                    <form id="registrationForm">
-                        <!-- Personal Information Section -->
-                        <div class="form-section">
-                            <h4 class="form-section-title"><i class="fas fa-user"></i> Personal Information</h4>
+                    <form id="registrationForm" method="POST" >
+
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="banglaName" class="form-label">Name in Bangla</label>
@@ -102,35 +141,52 @@
                                     <input type="text" class="form-control" id="englishName" required>
                                 </div>
                             </div>
+
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="institute" class="form-label">Institute</label>
-                                    <input type="text" class="form-control" id="institute" required>
-                                </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="email" class="form-label">Email Address</label>
                                     <input type="email" class="form-control" id="email" required>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="phone" class="form-label">Phone Number</label>
                                     <input type="tel" class="form-control" id="phone" required>
                                 </div>
+                                
+                                
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="gender" class="form-label">Gender</label>
                                     <select class="form-select" id="gender" required>
                                         <option value="" selected disabled>Select Gender</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
+                                        <!-- <option value="other">Ohter</option> -->
+
                                     </select>
                                 </div>
-                            </div>
-                        </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="dob" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" id="dob" required>
+                                </div>
 
-                        <!-- Academic Information Section -->
-                        <div class="form-section">
-                            <h4 class="form-section-title"><i class="fas fa-book"></i> Academic Information</h4>
+                            </div>
+
+
+                            <div class="row">
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="institute" class="form-label">Institute English</label>
+                                    <input type="text" class="form-control" id="englishinstitute" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="institute" class="form-label">Institute Bangla</label>
+                                    <input type="text" class="form-control" id="banglainstitute" required>
+                                </div>
+
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="class" class="form-label">Class</label>
@@ -160,11 +216,7 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Address Information Section -->
-                        <div class="form-section">
-                            <h4 class="form-section-title"><i class="fas fa-home"></i> Address Information</h4>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label for="division" class="form-label">Division</label>
@@ -195,11 +247,8 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Password Section -->
-                        <div class="form-section">
-                            <h4 class="form-section-title"><i class="fas fa-lock"></i> Password</h4>
+
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="password" class="form-label">Password</label>
@@ -223,13 +272,15 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
                         <!-- Submit Button -->
                         <div class="d-grid">
                             <button type="submit" class="btn btn-register">Register Now</button>
                         </div>
                     </form>
+                                            <div class="mt-3 text-center">
+                            <p>Already have an account? <a href="user-login.php">Login here</a></p>
+                        </div>
                 </div>
             </div>
         </div>
