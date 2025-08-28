@@ -5,7 +5,7 @@ session_start();
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
-define('DB_NAME', 'user_admin_panel');
+define('DB_NAME', 'bdiqpc');
 
 // Establish database connection
 try {

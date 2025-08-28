@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS user_admin_panel;
-USE user_admin_panel;
+CREATE DATABASE IF NOT EXISTS bdiqpc;
+USE bdiqpc;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
