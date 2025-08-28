@@ -4,21 +4,57 @@ require_once 'config.php';
 $error = '';
 $success = '';
 
+// Handle form submission
+// Name in bangla
+//Name in english
+// email
+// phone
+//gender
+// date of birth
+// institute in english
+// institute in bangla
+// class
+// category
+// contest
+// division
+// district
+// upozila
+// password
+// confirm password
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+
+    $nameinbangla = trim($_POST['banglaName']);
+    $nameinenglish = trim($_POST['englishName']);
     $email = trim($_POST['email']);
-    $full_name = trim($_POST['full_name']);
+    $phone = trim($_POST['phone']);
+    $gender = trim($_POST['']);
+    $dob = trim($_POST['dob']);
+    $instituteinenglish = trim($_POST['englishinstitute']);
+    $instituteinbangla = trim($_POST['banglainstitute']);
+    $class = trim($_POST['class']);
+    $category = trim($_POST['category']);
+    $contest = trim($_POST['contest']);
+    $division = trim($_POST['division']);
+    $district = trim($_POST['district']);
+    $upozila = trim($_POST['upozila']);
+    $password = trim($_POST['password']);
+
+    // $username = trim($_POST['username']);
+    // $password = trim($_POST['password']);
+    // $email = trim($_POST['email']);
+    // $full_name = trim($_POST['full_name']);
     
     // Validate input
-    if (empty($username) || empty($password) || empty($email)) {
+    if (empty($nameinenglish) || empty($email) || empty($password)) {
         $error = 'Please fill in all required fields.';
-    } elseif (strlen($password) < 6) {
-        $error = 'Password must be at least 6 characters long.';
+    } elseif (strlen($password) < 8) {
+        $error = 'Password must be at least 8 characters long.';
     } else {
         // Check if username or email already exists
         $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-        $stmt->execute([$username, $email]);
+        $stmt->execute([$nameinenglish, $email]);
         
         if ($stmt->fetch()) {
             $error = 'Username or email already exists.';
@@ -27,8 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             
             // Insert new user
-            $stmt = $pdo->prepare("INSERT INTO users (username, password, email, full_name) VALUES (?, ?, ?, ?)");
-            if ($stmt->execute([$username, $hashedPassword, $email, $full_name])) {
+            $stmt = $pdo->prepare("INSERT INTO users (username,name_englsih, password, email, full_name) VALUES (?, ?, ?, ?, ?)");
+            if ($stmt->execute([$username, $nameinenglish, $hashedPassword, $email, $full_name])) {
                 $success = 'Registration successful! You can now login.';
             } else {
                 $error = 'Registration failed. Please try again.';
@@ -134,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="banglaName" class="form-label">Name in Bangla</label>
-                                    <input type="text" class="form-control" id="banglaName" required>
+                                    <input type="text" class="form-control" id="banglaName" name="banglaName" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="englishName" class="form-label">Name in English</label>
@@ -159,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="col-md-6 mb-3">
                                     <label for="gender" class="form-label">Gender</label>
                                     <select class="form-select" id="gender" required>
-                                        <option value="" selected disabled>Select Gender</option>
+                                        <option value="no" selected disabled>Select Gender</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
                                         <!-- <option value="other">Ohter</option> -->
