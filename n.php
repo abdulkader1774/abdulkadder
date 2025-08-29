@@ -22,14 +22,14 @@ $success = '';
 // password
 // confirm password
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
 
     $nameinbangla = trim($_POST['banglaName']);
     $nameinenglish = trim($_POST['englishName']);
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
-    $gender = trim($_POST['']);
+    $gender = trim($_POST['gender']);
     $dob = trim($_POST['dob']);
     $instituteinenglish = trim($_POST['englishinstitute']);
     $instituteinbangla = trim($_POST['banglainstitute']);
@@ -47,14 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // $full_name = trim($_POST['full_name']);
     
     // Validate input
-    if (empty($nameinenglish) || empty($email) || empty($password)) {
+    if (empty($username) || empty($password) || empty($email)) {
         $error = 'Please fill in all required fields.';
-    } elseif (strlen($password) < 8) {
-        $error = 'Password must be at least 8 characters long.';
+    } elseif (strlen($password) < 6) {
+        $error = 'Password must be at least 6 characters long.';
     } else {
         // Check if username or email already exists
         $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-        $stmt->execute([$nameinenglish, $email]);
+        $stmt->execute([$username, $email]);
         
         if ($stmt->fetch()) {
             $error = 'Username or email already exists.';
@@ -63,8 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             
             // Insert new user
-            $stmt = $pdo->prepare("INSERT INTO users (username,name_englsih, password, email, full_name) VALUES (?, ?, ?, ?, ?)");
-            if ($stmt->execute([$username, $nameinenglish, $hashedPassword, $email, $full_name])) {
+            $stmt = $pdo->prepare("INSERT INTO users (username, password, email, full_name) VALUES (?, ?, ?, ?)");
+            if ($stmt->execute([$username, $hashedPassword, $email, $full_name])) {
                 $success = 'Registration successful! You can now login.';
             } else {
                 $error = 'Registration failed. Please try again.';
@@ -174,18 +174,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="englishName" class="form-label">Name in English</label>
-                                    <input type="text" class="form-control" id="englishName" required>
+                                    <input type="text" class="form-control" id="englishName" name="englishName" required>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="email" class="form-label">Email Address</label>
-                                    <input type="email" class="form-control" id="email" required>
+                                    <input type="email" class="form-control" id="email" name="email" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="phone" class="form-label">Phone Number</label>
-                                    <input type="tel" class="form-control" id="phone" required>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required>
                                 </div>
                                 
                                 
@@ -194,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="gender" class="form-label">Gender</label>
-                                    <select class="form-select" id="gender" required>
+                                    <select class="form-select" id="gender" name="gender" required>
                                         <option value="no" selected disabled>Select Gender</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="dob" class="form-label">Date of Birth</label>
-                                    <input type="date" class="form-control" id="dob" required>
+                                    <input type="date" class="form-control" id="dob" name="dob" required>
                                 </div>
 
                             </div>
@@ -213,12 +213,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="row">
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="institute" class="form-label">Institute English</label>
-                                    <input type="text" class="form-control" id="englishinstitute" required>
+                                    <label for="englishinstitute" class="form-label">Institute English</label>
+                                    <input type="text" class="form-control" id="englishinstitute" name="englishinstitute" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="institute" class="form-label">Institute Bangla</label>
-                                    <input type="text" class="form-control" id="banglainstitute" required>
+                                    <label for="banglainstitute" class="form-label">Institute Bangla</label>
+                                    <input type="text" class="form-control" id="banglainstitute" name="banglainstitute" required>
                                 </div>
 
                             </div>
@@ -226,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="class" class="form-label">Class</label>
-                                    <select class="form-select select-icon" id="class" required>
+                                    <select class="form-select select-icon" id="class" name="class" required>
                                         <option value="" selected disabled>Select Class</option>
                                         <option value="6">Class 6</option>
                                         <option value="7">Class 7</option>
@@ -239,13 +239,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="category" class="form-label">Category</label>
-                                    <input type="text" class="form-control" id="category" readonly>
+                                    <input type="text" class="form-control" id="category" name="category" readonly>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="contest" class="form-label">Contest</label>
-                                    <select class="form-select" id="contest" required>
+                                    <select class="form-select" id="contest" name="contest" required>
                                         <option value="" selected disabled>Select Contest</option>
                                         <option value="programming">Programming</option>
                                         <option value="quiz">Quiz</option>
@@ -256,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label for="division" class="form-label">Division</label>
-                                    <select class="form-select" id="division" required>
+                                    <select class="form-select" id="division" name="division" required>
                                         <option value="" selected disabled>Select Division</option>
                                         <option value="dhaka">Dhaka</option>
                                         <option value="chattogram">Chattogram</option>
@@ -270,14 +270,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="district" class="form-label">District</label>
-                                    <select class="form-select" id="district" required>
+                                    <select class="form-select" id="district" name="district" required>
                                         <option value="" selected disabled>Select District</option>
                                         <!-- Districts will be populated based on division selection -->
                                     </select>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="upozila" class="form-label">Upozela</label>
-                                    <select class="form-select" id="upozela" required>
+                                    <select class="form-select" id="upozela" name="upozila" required>
                                         <option value="" selected disabled>Select Upozela</option>
                                         <!-- Upozela will be populated based on district selection -->
                                     </select>
@@ -289,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="col-md-6 mb-3">
                                     <label for="password" class="form-label">Password</label>
                                     <div class="position-relative">
-                                        <input type="password" class="form-control" id="password" required>
+                                        <input type="password" class="form-control" id="password" name="password" required>
                                         <span class="password-toggle" id="togglePassword">
                                             <i class="far fa-eye"></i>
                                         </span>
@@ -321,6 +321,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
+
+    <!-- <form method="POST" action="">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="full_name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form> -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
