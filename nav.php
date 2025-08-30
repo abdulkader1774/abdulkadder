@@ -77,8 +77,9 @@ require_once 'config.php';
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
             <!-- Logo on the left -->
-            <a class="navbar-brand" href="index.php">
-                <img src="assets/img/apple-touch-icon.png" alt="Quiz System Logo">
+            <a class="navbar-brand d-flex" href="index.php">
+                <img src="../logo.png" alt="Quiz System Logo">
+                <p class = "mt-1 ms-2">BdIQPC</p>
             </a>
             
             <!-- Mobile Toggle Button -->

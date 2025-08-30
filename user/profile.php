@@ -23,12 +23,13 @@ $user = $stmt->fetch();
             background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
             padding: 20px 0;
             width: 280px;
-            position: fixed;
+            position: absolute;
             left: -280px;
             top: 0;
             z-index: 1000;
             transition: left 0.3s ease;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            /* margin-bottom: 20px; */
         }
         
         .sidebar.active {
@@ -260,53 +261,58 @@ $user = $stmt->fetch();
         </div>
         
         <nav class="sidebar-nav">
-            <div class="nav-item">
-                <a class="nav-link active" href="profile.php">
+            <div class="nav-item p-1">
+                <a class="nav-link active p-1" href="profile.php">
                     <i class="nav-icon bi bi-person"></i>Profile
                 </a>
             </div>
-            <div class="nav-item">
-                <a class="nav-link" href="edit-profile.php">
+            <div class="nav-item p-1">
+                <a class="nav-link p-1" href="edit-profile.php">
                     <i class="nav-icon bi bi-pencil"></i>Edit Profile
                 </a>
             </div>
-            <div class="nav-item">
-                <a class="nav-link" href="notification.php">
+            <div class="nav-item p-1">
+                <a class="nav-link p-1" href="notification.php">
                     <i class="nav-icon bi bi-bell"></i>Notifications
                 </a>
             </div>
-            <div class="nav-item">
-                <a class="nav-link" href="user-contest.php">
+            <div class="nav-item p-1">
+                <a class="nav-link p-1" href="user-contest.php">
                     <i class="nav-icon bi bi-trophy"></i>Mock Contests
                 </a>
             </div>
-            <div class="nav-item">
-                <a class="nav-link" href="user-leaderboard.php">
+            <div class="nav-item p-1">
+                <a class="nav-link p-1" href="user-leaderboard.php">
                     <i class="nav-icon bi bi-bar-chart"></i>Leaderboards
                 </a>
             </div>
-            <div class="nav-item">
-                <a class="nav-link" href="practice-contest.php">
+            <div class="nav-item p-1">
+                <a class="nav-link p-1" href="practice-contest.php">
                     <i class="nav-icon bi bi-book"></i>Practice
                 </a>
             </div>
-            <div class="nav-item">
-                <a class="nav-link" href="practice-leaderboard.php">
+            <div class="nav-item p-1">
+                <a class="nav-link p-1" href="practice-leaderboard.php">
                     <i class="nav-icon bi bi-graph-up"></i>Practice Results
                 </a>
             </div>
-            <div class="nav-item">
-                <a class="nav-link" href="contact-with-admin.php">
+            <div class="nav-item p-1">
+                <a class="nav-link p-1" href="contact-with-admin.php">
                     <i class="nav-icon bi bi-envelope"></i>Contact Admin
                 </a>
             </div>
+            <div class="nav-item p-1">
+            <a href="../logout.php" class="logout-btn d-flex align-items-center justify-content-center">
+                <i class="bi bi-box-arrow-right me-1"></i>Logout
+            </a>
+            </div>
         </nav>
         
-        <div class="sidebar-footer">
+        <!-- <div class="sidebar-footer">
             <a href="../logout.php" class="logout-btn d-flex align-items-center justify-content-center">
                 <i class="bi bi-box-arrow-right me-2"></i>Logout
             </a>
-        </div>
+        </div> -->
     </div>
     
     <!-- Main content -->
@@ -356,6 +362,7 @@ $user = $stmt->fetch();
         </div>
     </div>
 
+    <div class="mt-5 pt-5"></div>
     <?php include '../footer.php'; ?>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -49,19 +49,132 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Edit Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .sidebar {
-            min-height: 100vh;
-            background-color: #f8f9fa;
-            padding: 20px 0;
-        }
-        .sidebar .nav-link {
-            color: #333;
-            border-radius: 0;
-        }
-        .sidebar .nav-link.active {
-            background-color: #0d6efd;
-            color: white;
-        }
+/* Sidebar Base Styles */
+.sidebar {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding: 20px 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    color: #333;
+    border-radius: 0;
+    transition: all 0.2s;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #e9ecef;
+}
+
+.sidebar .nav-link.active {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.sidebar .nav-link.text-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.profile-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #dee2e6;
+}
+
+/* Mobile First Approach */
+.sidebar {
+    width: 100%;
+    transform: translateX(-100%);
+}
+
+.sidebar.show {
+    transform: translateX(0);
+}
+
+/* Toggle Button */
+.sidebar-toggle {
+    margin-top: 22%;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1100;
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    display: none;
+    cursor: pointer;
+}
+
+/* Backdrop for mobile */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* Responsive Design */
+@media (max-width: 767.98px) {
+    .sidebar-toggle {
+        display: block;
+    }
+    
+    .sidebar-backdrop.show {
+        display: block;
+    }
+    
+    .sidebar {
+        width: 280px;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 20px 15px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .sidebar {
+        width: 220px;
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 220px;
+        padding: 30px;
+    }
+}
+
+@media (min-width: 992px) {
+    .sidebar {
+        width: 250px;
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 250px;
+        padding: 30px;
+    }
+}
         .main-content {
             padding: 20px;
         }
@@ -79,6 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
+             <div class = "sidebar-toggle"></div>
             <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
                 <div class="position-sticky pt-3">
                     <div class="text-center mb-4">
@@ -86,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <h5>User Panel</h5>
                         <p class="text-muted">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></p>
                     </div>
-                    
+                     
                    <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link" href="profile.php">
@@ -186,6 +300,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <?php include '../footer.php'; ?>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar on mobile
+document.addEventListener('DOMContentLoaded', function() {
+    // Create toggle button
+    const toggleButton = document.createElement('button');
+    toggleButton.classList.add('sidebar-toggle');
+    toggleButton.innerHTML = '☰ Menu';
+    document.body.appendChild(toggleButton);
+    
+    // Create backdrop
+    const backdrop = document.createElement('div');
+    backdrop.classList.add('sidebar-backdrop');
+    document.body.appendChild(backdrop);
+    
+    // Get sidebar element
+    const sidebar = document.querySelector('.sidebar');
+    
+    // Toggle sidebar function
+    function toggleSidebar() {
+        sidebar.classList.toggle('show');
+        backdrop.classList.toggle('show');
+        document.body.classList.toggle('sidebar-open');
+    }
+    
+    // Add event listeners
+    toggleButton.addEventListener('click', toggleSidebar);
+    backdrop.addEventListener('click', toggleSidebar);
+    
+    // Close sidebar when a link is clicked (on mobile)
+    const navLinks = document.querySelectorAll('.sidebar .nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth < 768) {
+                toggleSidebar();
+            }
+        });
+    });
+    
+    // Adjust main content margin based on sidebar state
+    function adjustContentMargin() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        
+        if (window.innerWidth >= 768) {
+            const sidebarWidth = sidebar.offsetWidth;
+            mainContent.style.marginLeft = `${sidebarWidth}px`;
+        } else {
+            mainContent.style.marginLeft = '0';
+        }
+    }
+    
+    // Initial adjustment
+    adjustContentMargin();
+    
+    // Adjust on resize
+    window.addEventListener('resize', function() {
+        adjustContentMargin();
+        
+        // Auto-close sidebar when resizing to larger screens
+        if (window.innerWidth >= 768) {
+            sidebar.classList.remove('show');
+            backdrop.classList.remove('show');
+        }
+    });
+});
+    </script>
 </body>
 </html>
