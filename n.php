@@ -239,6 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <input type="text" class="form-control" id="category" name="category" readonly>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="contest" class="form-label">Contest</label>
@@ -247,6 +248,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <option value="programming">Programming</option>
                                         <option value="quiz">Quiz</option>
                                     </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="tid" class="form-label">Transaction</label>
+                                    <input type="text" class="form-control" id="tid" name="tid" required>
                                 </div>
                             </div>
 
