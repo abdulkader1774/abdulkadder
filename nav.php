@@ -32,6 +32,8 @@ require_once 'config.php';
             background-color: #0d6efd;
             transition: width 0.3s;
         }
+
+        
         .navbar-nav .nav-link:hover:after {
             width: 100%;
         }

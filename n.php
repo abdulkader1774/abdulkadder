@@ -5,26 +5,7 @@ $error = '';
 $success = '';
 
 // Handle form submission
-// Name in bangla
-//Name in english
-// email
-// phone
-//gender
-// date of birth
-// institute in english
-// institute in bangla
-// class
-// category
-// contest
-// division
-// district
-// upozila
-// password
-// confirm password
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-
     $nameinbangla = trim($_POST['banglaName']);
     $nameinenglish = trim($_POST['englishName']);
     $email = trim($_POST['email']);
@@ -40,34 +21,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $district = trim($_POST['district']);
     $upozila = trim($_POST['upozila']);
     $password = trim($_POST['password']);
-
-    // $username = trim($_POST['username']);
-    // $password = trim($_POST['password']);
-    // $email = trim($_POST['email']);
-    // $full_name = trim($_POST['full_name']);
     
     // Validate input
-    if (empty($username) || empty($password) || empty($email)) {
+    if (empty($nameinbangla) || empty($nameinenglish) || empty($email) || empty($password)) {
         $error = 'Please fill in all required fields.';
     } elseif (strlen($password) < 6) {
         $error = 'Password must be at least 6 characters long.';
     } else {
-        // Check if username or email already exists
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-        $stmt->execute([$username, $email]);
+        // Check if email already exists
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
         
         if ($stmt->fetch()) {
-            $error = 'Username or email already exists.';
+            $error = 'Email already exists.';
         } else {
-
             $address = $division."/".$district."/".$upozila;
+
+            // Get the least username (alphabetically first)
+            $stmta = $pdo->prepare("SELECT username FROM users ORDER BY username DESC LIMIT 1");
+            $stmta->execute();
+            $result = $stmta->fetch(PDO::FETCH_ASSOC);
+            $leastUsername = $result['username'];
+
+            $yourUsername = $leastUsername+1;
+
 
             // Hash password
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             
-            // Insert new user
-            $stmt = $pdo->prepare("INSERT INTO users (banglaname, englishname, englishinstitute, banglainstitute, class, category, contest, password, email, phone, address ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            if ($stmt->execute([$nameinbangla, $nameinenglish, $instituteinenglish, $instituteinbangla, $])) {
+            // Insert new user - corrected parameter count
+            $stmt = $pdo->prepare("INSERT INTO users (username, banglaname, englishname, englishinstitute, banglainstitute, class, category, contest, password, email, phone, address, gender, dob) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            
+            if ($stmt->execute([$yourUsername, $nameinbangla, $nameinenglish, $instituteinenglish, $instituteinbangla, $class, $category, $contest, $hashedPassword, $email, $phone, $address, $gender, $dob])) {
                 $success = 'Registration successful! You can now login.';
             } else {
                 $error = 'Registration failed. Please try again.';
@@ -167,6 +152,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <h2><i class="fas fa-user-graduate"></i> Student Registration Form</h2>
                         <p class="text-muted">Please fill in all the required information</p>
                     </div>
+
+                    <!-- Add this near the top of your form -->
+                    <?php if (!empty($error)): ?>
+                        <div class="alert alert-danger"><?php echo $error; ?></div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($success)): ?>
+                        <div class="alert alert-success"><?php echo $success; ?></div>
+                    <?php endif; ?>
 
                     <form id="registrationForm" method="POST" >
 
@@ -457,21 +451,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 });
             });
 
-            // Form submission
-            document.getElementById('registrationForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Validate passwords match
-                if (password.value !== confirmPassword.value) {
-                    confirmPassword.classList.add('is-invalid');
-                    passwordError.style.display = 'block';
-                    return;
-                }
-                
-                // If validation passes, show success message
-                alert('Registration Successful!');
-                // In a real application, you would submit the form data to a server here
-            });
+            // Replace the form submission handler with this:
+document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    // Validate passwords match
+    if (password.value !== confirmPassword.value) {
+        e.preventDefault();
+        confirmPassword.classList.add('is-invalid');
+        passwordError.style.display = 'block';
+        return;
+    }
+    
+    // If validation passes, allow form submission
+    // The form will submit normally to the PHP handler
+});
         });
     </script>
 </body>
