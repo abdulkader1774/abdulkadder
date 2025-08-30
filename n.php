@@ -59,12 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmt->fetch()) {
             $error = 'Username or email already exists.';
         } else {
+
+            $address = $division."/".$district."/".$upozila;
+
             // Hash password
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             
             // Insert new user
-            $stmt = $pdo->prepare("INSERT INTO users (username, password, email, full_name) VALUES (?, ?, ?, ?)");
-            if ($stmt->execute([$username, $hashedPassword, $email, $full_name])) {
+            $stmt = $pdo->prepare("INSERT INTO users (banglaname, englishname, englishinstitute, banglainstitute, class, category, contest, password, email, phone, address ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            if ($stmt->execute([$nameinbangla, $nameinenglish, $instituteinenglish, $instituteinbangla, $])) {
                 $success = 'Registration successful! You can now login.';
             } else {
                 $error = 'Registration failed. Please try again.';
