@@ -19,7 +19,8 @@ $user = $stmt->fetch();
     <style>
         /* Sidebar Styles */
         .sidebar {
-            min-height: 100vh;
+            min-height: 120vh;
+            /* height: 100%; */
             background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
             padding: 20px 0;
             width: 280px;
@@ -30,6 +31,11 @@ $user = $stmt->fetch();
             transition: left 0.3s ease;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             /* margin-bottom: 20px; */
+            
+        }
+
+        a {
+            text-decoration: none;
         }
         
         .sidebar.active {
@@ -71,7 +77,7 @@ $user = $stmt->fetch();
         .sidebar-nav {
             padding: 1rem 0;
             overflow-y: auto;
-            height: calc(100vh - 280px);
+            /* height: calc(100vh - 280px); */
         }
         
         .nav-item {
@@ -362,7 +368,7 @@ $user = $stmt->fetch();
         </div>
     </div>
 
-    <div class="mt-5 pt-5"></div>
+    <div class="mt-5 pt-5" styele = "margin-bottom :"></div>
     <?php include '../footer.php'; ?>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

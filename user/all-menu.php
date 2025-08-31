@@ -1,0 +1,451 @@
+<?php
+require_once '../config.php';
+requireLogin();
+
+$error = '';
+$success = '';
+
+// Get user data
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->execute([$_SESSION['user_id']]);
+$user = $stmt->fetch();
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $full_name = trim($_POST['full_name']);
+    $email = trim($_POST['email']);
+    $phone = trim($_POST['phone']);
+    $address = trim($_POST['address']);
+    
+    // Validate email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Please enter a valid email address.';
+    } else {
+        // Check if email already exists (excluding current user)
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+        $stmt->execute([$email, $_SESSION['user_id']]);
+        
+        if ($stmt->fetch()) {
+            $error = 'Email already exists. Please use a different email.';
+        } else {
+            // Update profile
+            $stmt = $pdo->prepare("UPDATE users SET full_name = ?, email = ?, phone = ?, address = ? WHERE id = ?");
+            
+            if ($stmt->execute([$full_name, $email, $phone, $address, $_SESSION['user_id']])) {
+                $success = 'Profile updated successfully!';
+            } else {
+                $error = 'Failed to update profile. Please try again.';
+            }
+        }
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    /* Card */
+    .card {
+        transition: transform 0.3s;
+        margin-bottom: 20px;
+        height: 100%;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-img-top {
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .card-title {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+
+    /* Sidebar Base Styles */
+    .sidebar {
+        min-height: 100vh;
+        background-color: #f8f9fa;
+        padding: 20px 0;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+        left: 0;
+        top: 0;
+        z-index: 1000;
+        overflow-y: auto;
+    }
+
+    .sidebar .nav-link {
+        color: #333;
+        border-radius: 0;
+        transition: all 0.2s;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar .nav-link:hover {
+        background-color: #e9ecef;
+    }
+
+    .sidebar .nav-link.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+    .sidebar .nav-link.text-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .profile-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #dee2e6;
+    }
+
+    /* Mobile First Approach */
+    .sidebar {
+        width: 100%;
+        transform: translateX(-100%);
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    /* Toggle Button */
+    .sidebar-toggle {
+        margin-top: 22%;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 1100;
+        background: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 12px;
+        display: none;
+        cursor: pointer;
+    }
+
+
+
+    /* Backdrop for mobile */
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 767.98px) {
+        .sidebar-toggle {
+            display: block;
+        }
+
+        .sidebar-backdrop.show {
+            display: block;
+        }
+
+        .sidebar {
+            width: 280px;
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: 20px 15px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        .sidebar {
+            width: 220px;
+            transform: translateX(0);
+        }
+
+        .main-content {
+            margin-left: 220px;
+            padding: 30px;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .sidebar {
+            width: 250px;
+            transform: translateX(0);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .profile-img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+    </style>
+</head>
+
+<body>
+    <?php include '../nav.php'; ?>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="image/default-profile.jpg" alt="Profile Image" class="profile-img mb-2">
+                        <h5>User Panel</h5>
+                        <p class="text-muted">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></p>
+                    </div>
+
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="profile.php">
+                                Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="edit-profile.php">
+                                Edit Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="notification.php">
+                                Notifications
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="user-contest.php">
+                                Mock Contests
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="user-leaderboard.php">
+                                Leaderboards
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="practice-contest.php">
+                                Practice
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="practice-leaderboard.php">
+                                Practice Results
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact-with-admin.php">
+                                Contact Admin
+                            </a>
+                        </li>
+                        <li class="nav-item mt-3">
+                            <a class="nav-link text-danger" href="../logout.php">
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">All Menu </h1>
+                </div>
+
+                <div class="container my-5">
+                    <div class="row">
+                        <!-- Card 1 -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="../logo.png"
+                                    class="card-img-top" alt="Card 1">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card Title 1</h5>
+                                    <p class="card-text">Some quick example text to build on the card title and make up
+                                        the bulk of the card's content.</p>
+                                    <a href="#" class="btn btn-primary">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="https://via.placeholder.com/300x180/1cc88a/ffffff?text=Card+2"
+                                    class="card-img-top" alt="Card 2">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card Title 2</h5>
+                                    <p class="card-text">Some quick example text to build on the card title and make up
+                                        the bulk of the card's content.</p>
+                                    <a href="#" class="btn btn-primary">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="https://via.placeholder.com/300x180/36b9cc/ffffff?text=Card+3"
+                                    class="card-img-top" alt="Card 3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card Title 3</h5>
+                                    <p class="card-text">Some quick example text to build on the card title and make up
+                                        the bulk of the card's content.</p>
+                                    <a href="#" class="btn btn-primary">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="https://via.placeholder.com/300x180/f6c23e/ffffff?text=Card+4"
+                                    class="card-img-top" alt="Card 4">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card Title 4</h5>
+                                    <p class="card-text">Some quick example text to build on the card title and make up
+                                        the bulk of the card's content.</p>
+                                    <a href="#" class="btn btn-primary">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 5 -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="https://via.placeholder.com/300x180/e74a3b/ffffff?text=Card+5"
+                                    class="card-img-top" alt="Card 5">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card Title 5</h5>
+                                    <p class="card-text">Some quick example text to build on the card title and make up
+                                        the bulk of the card's content.</p>
+                                    <a href="#" class="btn btn-primary">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 6 -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="https://via.placeholder.com/300x180/5a5c69/ffffff?text=Card+6"
+                                    class="card-img-top" alt="Card 6">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card Title 6</h5>
+                                    <p class="card-text">Some quick example text to build on the card title and make up
+                                        the bulk of the card's content.</p>
+                                    <a href="#" class="btn btn-primary">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <?php include '../footer.php'; ?>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Toggle sidebar on mobile
+    document.addEventListener('DOMContentLoaded', function() {
+        // Create toggle button
+        const toggleButton = document.createElement('button');
+        toggleButton.classList.add('sidebar-toggle');
+        toggleButton.innerHTML = '☰ Menu';
+        document.body.appendChild(toggleButton);
+
+        // Create backdrop
+        const backdrop = document.createElement('div');
+        backdrop.classList.add('sidebar-backdrop');
+        document.body.appendChild(backdrop);
+
+        // Get sidebar element
+        const sidebar = document.querySelector('.sidebar');
+
+        // Toggle sidebar function
+        function toggleSidebar() {
+            sidebar.classList.toggle('show');
+            backdrop.classList.toggle('show');
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        // Add event listeners
+        toggleButton.addEventListener('click', toggleSidebar);
+        backdrop.addEventListener('click', toggleSidebar);
+
+        // Close sidebar when a link is clicked (on mobile)
+        const navLinks = document.querySelectorAll('.sidebar .nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 768) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Adjust main content margin based on sidebar state
+        function adjustContentMargin() {
+            const mainContent = document.querySelector('.main-content');
+            if (!mainContent) return;
+
+            if (window.innerWidth >= 768) {
+                const sidebarWidth = sidebar.offsetWidth;
+                mainContent.style.marginLeft = `${sidebarWidth}px`;
+            } else {
+                mainContent.style.marginLeft = '0';
+            }
+        }
+
+        // Initial adjustment
+        adjustContentMargin();
+
+        // Adjust on resize
+        window.addEventListener('resize', function() {
+            adjustContentMargin();
+
+            // Auto-close sidebar when resizing to larger screens
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('show');
+                backdrop.classList.remove('show');
+            }
+        });
+    });
+    </script>
+</body>
+
+</html>
