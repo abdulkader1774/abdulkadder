@@ -125,7 +125,7 @@ $contests = $pdo->query("
                                 <div class="card contest-card h-100">
                                     <div class="card-body">
                                         <h5 class="card-title"><?php echo htmlspecialchars($contest['title']); ?></h5>
-                                        <p class="card-text"><?php echo htmlspecialchars($contest['description'] ?: 'No description'); ?></p>
+                                        <p class="card-text"><?php echo htmlspecialchars($contest['description'] ? : 'No description'); ?></p>
                                         <ul class="list-group list-group-flush mb-3">
                                             <li class="list-group-item">
                                                 <strong>Questions:</strong> <?php echo $contest['question_count']; ?>

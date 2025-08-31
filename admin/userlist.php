@@ -25,7 +25,7 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
 }
 
 // Get all users except current admin
-$stmt = $pdo->prepare("SELECT * FROM users WHERE id != ? ORDER BY created_at DESC");
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id != ? ORDER BY created_at ASC");
 $stmt->execute([$_SESSION['user_id']]);
 $users = $stmt->fetchAll();
 ?>
