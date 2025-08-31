@@ -51,27 +51,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
     /* Card */
-    .card {
-        transition: transform 0.3s;
-        margin-bottom: 20px;
-        height: 100%;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-img-top {
-        height: 180px;
-        object-fit: cover;
-    }
-
-    .card-title {
-        color: #2c3e50;
-        font-weight: 600;
-    }
-
+.card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px auto 20px;
+            color: white;
+            font-size: 32px;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        }
+        .card-title {
+            color: #2d3436;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .card-text {
+            color: #636e72;
+            text-align: center;
+            padding: 0 15px;
+        }
+        .btn-container {
+            text-align: center;
+            margin: 20px 0 25px;
+        }
+        .header-title {
+            color: #2d3436;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        @media (max-width: 767.98px) {
+            .logo-container {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+        }
 
     /* Sidebar Base Styles */
     .sidebar {
@@ -286,93 +319,109 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h1 class="h2">All Menu </h1>
                 </div>
 
-                <div class="container my-5">
-                    <div class="row">
-                        <!-- Card 1 -->
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img src="../logo.png"
-                                    class="card-img-top" alt="Card 1">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Title 1</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up
-                                        the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Learn More</a>
-                                </div>
-                            </div>
-                        </div>
+              
 
-                        <!-- Card 2 -->
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img src="https://via.placeholder.com/300x180/1cc88a/ffffff?text=Card+2"
-                                    class="card-img-top" alt="Card 2">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Title 2</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up
-                                        the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Learn More</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 3 -->
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img src="https://via.placeholder.com/300x180/36b9cc/ffffff?text=Card+3"
-                                    class="card-img-top" alt="Card 3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Title 3</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up
-                                        the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Learn More</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 4 -->
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img src="https://via.placeholder.com/300x180/f6c23e/ffffff?text=Card+4"
-                                    class="card-img-top" alt="Card 4">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Title 4</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up
-                                        the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Learn More</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 5 -->
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img src="https://via.placeholder.com/300x180/e74a3b/ffffff?text=Card+5"
-                                    class="card-img-top" alt="Card 5">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Title 5</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up
-                                        the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Learn More</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 6 -->
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img src="https://via.placeholder.com/300x180/5a5c69/ffffff?text=Card+6"
-                                    class="card-img-top" alt="Card 6">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Title 6</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up
-                                        the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Learn More</a>
-                                </div>
-                            </div>
+                    <div class="container">
+        <h1 class="header-title">Bootstrap Feature Cards</h1>
+        
+        <div class="row">
+            <!-- Card 1 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="logo-container">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Fast Performance</h3>
+                        <p class="card-text">Optimized for speed and efficiency with minimal resource usage and fast loading times.</p>
+                        <div class="btn-container">
+                            <a href="#" class="btn btn-primary">Learn More</a>
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="logo-container">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Responsive Design</h3>
+                        <p class="card-text">Looks great on any device, whether it's a phone, tablet, or desktop computer.</p>
+                        <div class="btn-container">
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="logo-container">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Customizable</h3>
+                        <p class="card-text">Easy to customize and extend with well-documented code and modular structure.</p>
+                        <div class="btn-container">
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 4 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="logo-container">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Secure</h3>
+                        <p class="card-text">Built with security in mind, following best practices to protect your data.</p>
+                        <div class="btn-container">
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 5 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="logo-container">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Clean Code</h3>
+                        <p class="card-text">Well-organized code that's easy to understand, maintain, and build upon.</p>
+                        <div class="btn-container">
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 6 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="logo-container">
+                        <i class="fas fa-life-ring"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Support</h3>
+                        <p class="card-text">Comprehensive documentation and dedicated support team to help you succeed.</p>
+                        <div class="btn-container">
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
             </div>
         </div>
