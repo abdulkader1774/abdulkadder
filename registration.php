@@ -254,7 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="transction" class="form-label">Transction ID</label>
+                                    <label for="transction" class="form-label">Transaction ID</label>
                                     <input type="text" class="form-control" id="transction" name="transction" required>
                                 </div>
 
