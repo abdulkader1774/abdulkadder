@@ -39,19 +39,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $address = $division.",".$district.",".$upozila;
 
             // Get the least username (alphabetically first)
-            // $stmta = $pdo->prepare("SELECT username FROM users ORDER BY username DESC LIMIT 1");
-            // $stmta->execute();
-            // $result = $stmta->fetch(PDO::FETCH_ASSOC);
-            // $leastUsername = $result['username'];
+            $stmta = $pdo->prepare("SELECT username FROM users ORDER BY username DESC LIMIT 1");
+            $stmta->execute();
+            $result = $stmta->fetch(PDO::FETCH_ASSOC);
+            $leastUsername = $result['username'];
 
-            //$yourUsername = $leastUsername+1;
-            $yourUsername = $nameinenglish . rand(1000, 9999); // Simple username generation
+            $yourUsername = $leastUsername+1;
+            // $yourUsername = $nameinenglish . rand(1000, 9999); // Simple username generation
 
             // Hash password
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             
             // Insert new user - corrected parameter count
-            $stmt = $pdo->prepare("INSERT INTO users (username, banglaname, englishname, englishinstitute, banglainstitute, class, category, contest, password, email, phone, address, gender, dob, transction) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?)");
+            $stmt = $pdo->prepare("INSERT INTO users (username, banglaname, englishname, englishinstitute, banglainstitute, class, category, contest, password, email, phone, address, gender, dob, transction) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             
             if ($stmt->execute([$yourUsername, $nameinbangla, $nameinenglish, $instituteinenglish, $instituteinbangla, $class, $category, $contest, $hashedPassword, $email, $phone, $address, $gender, $dob, $transction])) {
                 $success = 'Registration successful! You can now login.';

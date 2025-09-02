@@ -244,10 +244,10 @@ $user = $stmt->fetch();
     </style>
 </head>
 <body>
-    <?php include '../nav.php'; ?>
     
+    <?php include '../nav.php'; ?>
     <!-- Mobile Toggle Button -->
-    <button class="sidebar-toggle mt-5" id="sidebarToggle">
+    <button class="sidebar-toggle mt-5 " id="sidebarToggle">
         <span></span>
     </button>
     
@@ -322,7 +322,7 @@ $user = $stmt->fetch();
     </div>
     
     <!-- Main content -->
-     <style>
+    <style>
         /* User Profile Card Responsive Styles */
 .card {
     margin: 1rem;
@@ -353,7 +353,78 @@ $user = $stmt->fetch();
     background-color: #f8f9fa;
     font-weight: 600;
 }
-     </style>
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .profile-img {
+        max-width: 140px;
+        margin-bottom: 1rem !important;
+    }
+    
+    .table th, .table td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .table th {
+        width: 35%;
+    }
+}
+
+@media (max-width: 576px) {
+    .card {
+        margin: 0.5rem;
+    }
+    
+    .profile-img {
+        max-width: 120px;
+    }
+    
+    .table th, .table td {
+        padding: 0.4rem;
+        font-size: 0.85rem;
+    }
+    
+    .d-flex.justify-content-between {
+        padding: 0.5rem;
+    }
+    
+    .h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 400px) {
+    .table th, .table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .table tr {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0.5rem;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+    
+    .table th {
+        background-color: #e9ecef;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .table td {
+        border-top: none;
+        border-left: 1px solid #dee2e6;
+    }
+}
+    </style>
     <div class="main-content">
         <div class="container-fluid">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
