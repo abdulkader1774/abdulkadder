@@ -4,31 +4,56 @@ require_once 'config.php';
 $error = '';
 $success = '';
 
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+    $nameinbangla = trim($_POST['banglaName']);
+    $nameinenglish = trim($_POST['englishName']);
     $email = trim($_POST['email']);
-    $full_name = trim($_POST['full_name']);
+    $phone = trim($_POST['phone']);
+    $gender = trim($_POST['gender']);
+    $dob = trim($_POST['dob']);
+    $instituteinenglish = trim($_POST['englishinstitute']);
+    $instituteinbangla = trim($_POST['banglainstitute']);
+    $class = trim($_POST['class']);
+    $category = trim($_POST['category']);
+    $contest = trim($_POST['contest']);
+    $division = trim($_POST['division']);
+    $district = trim($_POST['district']);
+    $upozila = trim($_POST['upozila']);
+    $password = trim($_POST['password']);
+    $transction = trim($_POST['transction']);
     
     // Validate input
-    if (empty($username) || empty($password) || empty($email)) {
+    if (empty($nameinbangla) || empty($nameinenglish) || empty($email) || empty($password)) {
         $error = 'Please fill in all required fields.';
     } elseif (strlen($password) < 6) {
         $error = 'Password must be at least 6 characters long.';
     } else {
-        // Check if username or email already exists
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-        $stmt->execute([$username, $email]);
+        // Check if email already exists
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
         
         if ($stmt->fetch()) {
-            $error = 'Username or email already exists.';
+            $error = 'Email already exists.';
         } else {
+            $address = $division.",".$district.",".$upozila;
+
+            // Get the least username (alphabetically first)
+            // $stmta = $pdo->prepare("SELECT username FROM users ORDER BY username DESC LIMIT 1");
+            // $stmta->execute();
+            // $result = $stmta->fetch(PDO::FETCH_ASSOC);
+            // $leastUsername = $result['username'];
+
+            //$yourUsername = $leastUsername+1;
+            $yourUsername = $nameinenglish . rand(1000, 9999); // Simple username generation
+
             // Hash password
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             
-            // Insert new user
-            $stmt = $pdo->prepare("INSERT INTO users (username, password, email, full_name) VALUES (?, ?, ?, ?)");
-            if ($stmt->execute([$username, $hashedPassword, $email, $full_name])) {
+            // Insert new user - corrected parameter count
+            $stmt = $pdo->prepare("INSERT INTO users (username, banglaname, englishname, englishinstitute, banglainstitute, class, category, contest, password, email, phone, address, gender, dob, transction) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?)");
+            
+            if ($stmt->execute([$yourUsername, $nameinbangla, $nameinenglish, $instituteinenglish, $instituteinbangla, $class, $category, $contest, $hashedPassword, $email, $phone, $address, $gender, $dob, $transction])) {
                 $success = 'Registration successful! You can now login.';
             } else {
                 $error = 'Registration failed. Please try again.';
@@ -38,158 +63,401 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Student Registration Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .registration-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #3f51b5;
+        }
+        .header h2 {
+            font-weight: 700;
+        }
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-section-title {
+            color: #3f51b5;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        .form-section-title i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        .password-toggle {
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            color: #6c757d;
+        }
+        .btn-register {
+            background-color: #3f51b5;
+            color: white;
+            padding: 12px 30px;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .btn-register:hover {
+            background-color: #303f9f;
+            transform: translateY(-2px);
+        }
+        .select-icon {
+            position: relative;
+        }
+        .select-icon:after {
+            content: "▼";
+            font-size: 12px;
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            color: #6c757d;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
-    <?php include "nav.php" ?>
-    <div class="container mt-5">
+    <?php include"nav.php" ?>
+    <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">User Registration</h4>
+            <div class="col-lg-10">
+                <div class="registration-container">
+                    <div class="header">
+                        <h2><i class="fas fa-user-graduate"></i> Student Registration Form</h2>
+                        <p class="text-muted">Please fill in all the required information</p>
                     </div>
-                    <div class="card-body">
-                        <?php if ($error): ?>
-                            <div class="alert alert-danger"><?php echo $error; ?></div>
-                        <?php endif; ?>
-                        <?php if ($success): ?>
-                            <div class="alert alert-success"><?php echo $success; ?></div>
-                        <?php endif; ?>
-                        
-                        <form method="POST" action="">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
-                            </div>
-                            <div class=" d-flex">
-                                <div class="name english">
-                                    <label for="name-english" class="form-label">Name(English)</label>
-                                    <input type="text" class="form-control" id="nameenglish" name="nameenglish" required>
+
+                    <!-- Add this near the top of your form -->
+                    <?php if (!empty($error)): ?>
+                        <div class="alert alert-danger"><?php echo $error; ?></div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($success)): ?>
+                        <div class="alert alert-success"><?php echo $success; ?></div>
+                    <?php endif; ?>
+
+                    <form id="registrationForm" method="POST" >
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="banglaName" class="form-label">Name in Bangla</label>
+                                    <input type="text" class="form-control" id="banglaName" name="banglaName" required>
                                 </div>
-                                    <div class="name bangla">
-                                    <label for="name-bangla" class="form-label">Name(Bangla)</label>
-                                    <input type="text" class="form-control" id="namebangla" name="namebangla" required>
+                                <div class="col-md-6 mb-3">
+                                    <label for="englishName" class="form-label">Name in English</label>
+                                    <input type="text" class="form-control" id="englishName" name="englishName" required>
                                 </div>
                             </div>
 
-                            <div class=" d-flex">
-                                <div class="email">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="text" class="form-control" id="email" name="email" required>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
                                 </div>
-                                    <div class="phone">
-                                    <label for="phone" class="form-label">Phone</label>
-                                    <input type="text" class="form-control" id="phone" name="phone" required>
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required>
                                 </div>
+                                
+                                
                             </div>
 
-                            <div class=" d-flex">
-                                <div class="gender">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
                                     <label for="gender" class="form-label">Gender</label>
-                                    <input type="text" class="form-control" id="gender" name="gender" required>
+                                    <select class="form-select" id="gender" name="gender" required>
+                                        <option value="no" selected disabled>Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <!-- <option value="other">Ohter</option> -->
+
+                                    </select>
                                 </div>
-                                    <div class="dateofbirth">
-                                    <label for="dateofbirth" class="form-label">Date of Birth</label>
-                                    <input type="text" class="form-control" id="dateofbirth" name="dateofbirth" required>
+                                <div class="col-md-6 mb-3">
+                                    <label for="dob" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" id="dob" name="dob" required>
                                 </div>
+
                             </div>
 
-                            <div class=" d-flex">
-                                <div class="institute-english">
-                                    <label for="institute-english" class="form-label">Institute(English)</label>
-                                    <input type="text" class="form-control" id="institute-english" name="institute-english" required>
+
+                            <div class="row">
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="banglainstitute" class="form-label">Institute Bangla</label>
+                                    <input type="text" class="form-control" id="banglainstitute" name="banglainstitute" required>
                                 </div>
-                                    <div class="institute-bangla">
-                                    <label for="institute-bangla" class="form-label">Institute(Bangla)</label>
-                                    <input type="text" class="form-control" id="institute-bangla" name="institute-bangla" required>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="englishinstitute" class="form-label">Institute English</label>
+                                    <input type="text" class="form-control" id="englishinstitute" name="englishinstitute" required>
                                 </div>
+                                
+
                             </div>
 
-                            
-                            <div class=" d-flex">
-                                <div class="medium">
-                                    <label for="medium" class="form-label">Medium</label>
-                                    <input type="text" class="form-control" id="medium" name="medium" required>
-                                </div>
-
-                                <div class="class">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
                                     <label for="class" class="form-label">Class</label>
-                                    <input type="text" class="form-control" id="class" name="class" required>
+                                    <select class="form-select select-icon" id="class" name="class" required>
+                                        <option value="" selected disabled>Select Class</option>
+                                        <option value="6">Class 6</option>
+                                        <option value="7">Class 7</option>
+                                        <option value="8">Class 8</option>
+                                        <option value="9">Class 9</option>
+                                        <option value="10">Class 10</option>
+                                        <option value="11">Class 11</option>
+                                        <option value="12">Class 12</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="category" class="form-label">Category</label>
+                                    <input type="text" class="form-control" id="category" name="category" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="contest" class="form-label">Contest</label>
+                                    <select class="form-select" id="contest" name="contest" required>
+                                        <option value="" selected disabled>Select Contest</option>
+                                        <option value="programming">Programming</option>
+                                        <option value="quiz">Quiz</option>
+                                    </select>
                                 </div>
 
-                                <div class="catagori">
-                                    <label for="catagori" class="form-label">Catagori</label>
-                                    <input type="select" class="form-control" id="catagori" name="catagori" required>
-                                    <select name="data" id="">
-                                        <option value="1">hello</option>
+                                <div class="col-md-6 mb-3">
+                                    <label for="transction" class="form-label">Transction ID</label>
+                                    <input type="text" class="form-control" id="transction" name="transction" required>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="division" class="form-label">Division</label>
+                                    <select class="form-select" id="division" name="division" required>
+                                        <option value="" selected disabled>Select Division</option>
+                                        <option value="dhaka">Dhaka</option>
+                                        <option value="chattogram">Chattogram</option>
+                                        <option value="rajshahi">Rajshahi</option>
+                                        <option value="khulna">Khulna</option>
+                                        <option value="barishal">Barishal</option>
+                                        <option value="sylhet">Sylhet</option>
+                                        <option value="rangpur">Rangpur</option>
+                                        <option value="mymensingh">Mymensingh</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="district" class="form-label">District</label>
+                                    <select class="form-select" id="district" name="district" required>
+                                        <option value="" selected disabled>Select District</option>
+                                        <!-- Districts will be populated based on division selection -->
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="upozila" class="form-label">Upozela</label>
+                                    <select class="form-select" id="upozela" name="upozila" required>
+                                        <option value="" selected disabled>Select Upozela</option>
+                                        <!-- Upozela will be populated based on district selection -->
                                     </select>
                                 </div>
                             </div>
 
-                            <div class=" d-flex">
 
-                            
-                                <div class="division">
-                                    <label for="division" class="form-label">Division</label>
-                                    <input type="text" class="form-control" id="division" name="division" required>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <div class="position-relative">
+                                        <input type="password" class="form-control" id="password" name="password" required>
+                                        <span class="password-toggle" id="togglePassword">
+                                            <i class="far fa-eye"></i>
+                                        </span>
+                                    </div>
                                 </div>
-
-                                <div class="district">
-                                    <label for="district" class="form-label">District</label>
-                                    <input type="text" class="form-control" id="district" name="district" required>
+                                <div class="col-md-6 mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                    <div class="position-relative">
+                                        <input type="password" class="form-control" id="confirmPassword" required>
+                                        <span class="password-toggle" id="toggleConfirmPassword">
+                                            <i class="far fa-eye"></i>
+                                        </span>
+                                    </div>
+                                    <div class="invalid-feedback" id="passwordError">
+                                        Passwords do not match!
+                                    </div>
                                 </div>
-
-
-                                <div class="upozila">
-                                    <label for="upozila" class="form-label">Upozila</label>
-                                    <input type="text" class="form-control" id="upozila" name="upozila" required>
-                                </div>
                             </div>
 
-                            <div class=" d-flex">
-                                <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="confiram-password" class="form-label">Confirm Password</label>
-                                <input type="password" class="form-control" id="confiram-password" name="confiram-password" required>
-                            </div>
-                            </div>
-
-                            <!-- <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div> -->
-
-                            <!-- <div class="mb-3">
-                                <label for="full_name" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="full_name" name="full_name">
-                            </div> -->
-
-                            <button type="submit" class="btn btn-primary w-100">Register</button>
-                        </form>
-                        
-                        <div class="mt-3 text-center">
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-register text-light bg-primary">Register Now</button>
+                        </div>
+                    </form>
+                                            <div class="mt-3 text-center">
                             <p>Already have an account? <a href="user-login.php">Login here</a></p>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <?php include "footer.php" ?>
+   
+    <?php include"footer.php" ?>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Category auto-selection based on class
+            const classSelect = document.getElementById('class');
+            const categoryInput = document.getElementById('category');
+            
+            classSelect.addEventListener('change', function() {
+                const selectedClass = parseInt(this.value);
+                if (selectedClass >= 6 && selectedClass <= 10) {
+                    categoryInput.value = 'Junior';
+                } else if (selectedClass === 11 || selectedClass === 12) {
+                    categoryInput.value = 'Senior';
+                } else {
+                    categoryInput.value = '';
+                }
+            });
+
+            // Password visibility toggling
+            const togglePassword = document.getElementById('togglePassword');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const passwordError = document.getElementById('passwordError');
+
+            togglePassword.addEventListener('click', function() {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+
+            toggleConfirmPassword.addEventListener('click', function() {
+                const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPassword.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+
+            // Password matching validation
+            confirmPassword.addEventListener('input', function() {
+                if (password.value !== confirmPassword.value) {
+                    confirmPassword.classList.add('is-invalid');
+                    passwordError.style.display = 'block';
+                } else {
+                    confirmPassword.classList.remove('is-invalid');
+                    passwordError.style.display = 'none';
+                }
+            });
+
+            // Sample data for districts and upozelas (in a real app, this would come from a database)
+            const divisionDistricts = {
+                dhaka: ['Dhaka', 'Gazipur', 'Narayanganj', 'Tangail', 'Kishoreganj'],
+                chattogram: ['Chattogram', 'Cox\'s Bazar', 'Comilla', 'Feni', 'Brahmanbaria'],
+                rajshahi: ['Rajshahi', 'Bogura', 'Pabna', 'Sirajganj', 'Natore'],
+                khulna: ['Khulna', 'Satkhira', 'Jessore', 'Bagerhat', 'Chuadanga'],
+                barishal: ['Barishal', 'Patuakhali', 'Bhola', 'Pirojpur', 'Jhalokati'],
+                sylhet: ['Sylhet', 'Moulvibazar', 'Habiganj', 'Sunamganj'],
+                rangpur: ['Rangpur', 'Dinajpur', 'Gaibandha', 'Kurigram', 'Nilphamari'],
+                mymensingh: ['Mymensingh', 'Netrokona', 'Jamalpur', 'Sherpur']
+            };
+
+            const districtUpozelas = {
+                Dhaka: ['Dhamrai', 'Dohar', 'Keraniganj', 'Nawabganj', 'Savar'],
+                Gazipur: ['Gazipur Sadar', 'Kaliakair', 'Kaliganj', 'Kapasia', 'Sreepur'],
+                Narayanganj: ['Narayanganj Sadar', 'Araihazar', 'Bandar', 'Rupganj', 'Sonargaon'],
+                Tangail: ['Tangail Sadar', 'Basail', 'Bhuapur', 'Delduar', 'Ghatail'],
+                Kishoreganj: ['Kishoreganj Sadar', 'Austagram', 'Bajitpur', 'Bhairab', 'Hossainpur'],
+                Chattogram: ['Chattogram Sadar', 'Anwara', 'Banshkhali', 'Boalkhali', 'Chandanaish'],
+                'Cox\'s Bazar': ['Cox\'s Bazar Sadar', 'Chakaria', 'Kutubdia', 'Maheshkhali', 'Ramu'],
+                Comilla: ['Comilla Sadar', 'Barura', 'Brahmanpara', 'Burichang', 'Chandina']
+            };
+
+            // Populate districts based on division selection
+            const divisionSelect = document.getElementById('division');
+            const districtSelect = document.getElementById('district');
+            const upozelaSelect = document.getElementById('upozela');
+
+            divisionSelect.addEventListener('change', function() {
+                const division = this.value;
+                const districts = divisionDistricts[division] || [];
+                
+                // Clear previous options
+                districtSelect.innerHTML = '<option value="" selected disabled>Select District</option>';
+                upozelaSelect.innerHTML = '<option value="" selected disabled>Select Upozela</option>';
+                
+                // Add new options
+                districts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district.toLowerCase();
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            });
+
+            // Populate upozelas based on district selection
+            districtSelect.addEventListener('change', function() {
+                const district = this.options[this.selectedIndex].textContent;
+                const upozelas = districtUpozelas[district] || [];
+                
+                // Clear previous options
+                upozelaSelect.innerHTML = '<option value="" selected disabled>Select Upozela</option>';
+                
+                // Add new options
+                upozelas.forEach(upozela => {
+                    const option = document.createElement('option');
+                    option.value = upozela.toLowerCase();
+                    option.textContent = upozela;
+                    upozelaSelect.appendChild(option);
+                });
+            });
+
+            // Replace the form submission handler with this:
+document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    // Validate passwords match
+    if (password.value !== confirmPassword.value) {
+        e.preventDefault();
+        confirmPassword.classList.add('is-invalid');
+        passwordError.style.display = 'block';
+        return;
+    }
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    // If validation passes, allow form submission
+    // The form will submit normally to the PHP handler
+});
+        });
+    </script>
 </body>
 </html>

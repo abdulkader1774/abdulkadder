@@ -32,6 +32,8 @@ require_once 'config.php';
             background-color: #0d6efd;
             transition: width 0.3s;
         }
+
+        
         .navbar-nav .nav-link:hover:after {
             width: 100%;
         }
@@ -78,7 +80,7 @@ require_once 'config.php';
         <div class="container">
             <!-- Logo on the left -->
             <a class="navbar-brand d-flex" href="index.php">
-                <img src="../logo.png" alt="Quiz System Logo">
+                <img src="logo.png" alt="Quiz System Logo">
                 <p class = "mt-1 ms-2">BdIQPC</p>
             </a>
             
@@ -136,5 +138,4 @@ require_once 'config.php';
         </div>
     </nav>
     
-    <main class="flex-shrink-0">
         

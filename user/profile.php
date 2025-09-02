@@ -322,6 +322,38 @@ $user = $stmt->fetch();
     </div>
     
     <!-- Main content -->
+     <style>
+        /* User Profile Card Responsive Styles */
+.card {
+    margin: 1rem;
+    border-radius: 8px;
+}
+
+.profile-img {
+    max-width: 180px;
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    object-fit: cover;
+    aspect-ratio: 1/1;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border: 1px solid #dee2e6;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+     </style>
     <div class="main-content">
         <div class="container-fluid">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
